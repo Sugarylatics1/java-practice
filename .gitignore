@@ -1,0 +1,7 @@
+# NEVER commit these
+log.txt
+limits.json
+*.class
+*.jar
+.idea/
+.vscode/
