@@ -1,7 +1,13 @@
-# NEVER commit these
-log.txt
-limits.json
+build/
+.gradle/
 *.class
-*.jar
+log*.txt
+app.log
+limits.json
 .idea/
 .vscode/
+*.swp
+.DS_Store
+Thumbs.db
+*.env
+config.properties
