@@ -7,6 +7,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.Executors;
+import java.util.UUID;
 
 public class Today {
     private static final String VALID_TOKEN = "secret123";
@@ -16,13 +17,13 @@ public class Today {
     private static final LocalDateTime startTime = LocalDateTime.now();
     private static void addCorsHeaders(HttpExchange ex) {
     	ex.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-	ex.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		ex.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     	ex.getResponseHeaders().add("Access-Control-Allow-Headers", "Authorization, Content-Type");
+		ex.getResponseHeaders().add("Access-Control-Expose-Headers","X-Request-ID, Content-Type");
     }
     public static void main(String[] args) throws IOException {
         HttpServer s = HttpServer.create(new InetSocketAddress(8080), 0);
         loadLimits();
-
         s.createContext("/ping", ex -> {
             if ("OPTIONS".equalsIgnoreCase(ex.getRequestMethod())) {
                 addCorsHeaders(ex);
@@ -133,13 +134,13 @@ public class Today {
         finally { fileLock.unlock(); }
     }
     private static void logEvent(String level, String ip, String path, int status, int hits) {
-	String dateStr = LocalDate.now().toString();
-	String ts = LocalDateTime.now().toString();
-	String logFile = "log-" + dateStr + ".txt";
-	String json = String.format("{\"ts\":\"%s\",\"level\":\"%s\",\"ip\":\"%s\",\"path\":\"%s\",\"status\":%d,\"hits\":%d}%n",ts,level,ip,path,status,hits);
-	try(PrintWriter out = new PrintWriter(new FileWriter(logFile, true))) {
-	    out.print(json);
-	} catch(IOException e) { System.err.println("Log failed: " + e.getMessage()); }
+		String dateStr = LocalDate.now().toString();
+		String ts = LocalDateTime.now().toString();
+		String logFile = "log-" + dateStr + ".txt";
+		String json = String.format("{\"ts\":\"%s\",\"level\":\"%s\",\"ip\":\"%s\",\"path\":\"%s\",\"status\":%d,\"hits\":%d}%n",ts,level,ip,path,status,hits);
+		try(PrintWriter out = new PrintWriter(new FileWriter(logFile, true))) {
+	    	out.print(json);
+		} catch(IOException e) { System.err.println("Log failed: " + e.getMessage()); }
     }
     
 }
