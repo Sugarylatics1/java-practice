@@ -28,6 +28,7 @@
           headers: { 'Authorization': token, 'Content-Type': 'application/json' }
         });
         const data = await res.text();
+	const traceId = res.headers.get('X-Request-ID') || 'N/A';
         out.textContent = `👉 HTTP ${res.status}\n${data}`;
       } catch (e) {
         out.textContent = `❌ Error: ${e.message}\nCheck if server is running.`;
