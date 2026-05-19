@@ -24,9 +24,9 @@ public class HealthHandler implements HttpHandler {
         String traceId = UUID.randomUUID().toString();
         String ip = ex.getRemoteAddress().getAddress().getHostAddress();
         ex.getResponseHeaders().set("X-TraceId", traceId);
-        int hits = rateLimiter.recordHit(ip);
 
-        if (hits > 5) {
+
+        if (!rateLimiter.isAllowed(ip)) {
             Map<String, Object> err = new HashMap<>();
             err.put("error", "rate_limited");
             err.put("trace", traceId);

@@ -6,7 +6,7 @@ import java.util.concurrent.*;
 public class Today {
     public static void main(String[] args) throws Exception {
         HttpServer s = HttpServer.create(new InetSocketAddress(8080), 0);
-        RateLimiter limiter = new RateLimiter("limits.json");
+        RateLimiter limiter = new RateLimiter(5_000, 5);
         PingHandler ping = new PingHandler(limiter);
         HealthHandler health = new HealthHandler(limiter);
         MetricsHandler metrics = new MetricsHandler();
@@ -16,6 +16,7 @@ public class Today {
         s.createContext("/ping", new GlobalExceptionHandler(authForPing));
         s.createContext("/health", new GlobalExceptionHandler(authForHealth));
         s.createContext("/metrics",new GlobalExceptionHandler(authForMetrics));
+        s.createContext("/stats", new GlobalExceptionHandler(new StatsHandler()));
         s.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
         s.start();
         System.out.println("Server running on http://localhost:8080");
